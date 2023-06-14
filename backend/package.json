@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js"
+  },
+  "author": "Anas",
+  "license": "MIT",
+  "dependencies": {
+    "@socket.io/redis-adapter": "^8.2.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
+    "mongoose": "^7.2.4",
+    "redis": "^4.6.7",
+    "socket.io": "^4.6.2",
+    "socket.io-redis": "^6.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.0",
+    "nodemon": "^2.0.22"
+  }
+}

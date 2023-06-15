@@ -3,6 +3,7 @@ import Input from './Input';
 import Fieldset from './Fieldset';
 import Label from './Label';
 import Select from './Select';
+import ShowPassBtn from './ShowPassBtn';
 
 type FormControlProps = {
   children: React.ReactNode;
@@ -17,5 +18,6 @@ FormControl.fieldSet = Fieldset;
 FormControl.Input = Input;
 FormControl.label = Label;
 FormControl.select = Select;
+FormControl.ShowPass = ShowPassBtn
 
 export default FormControl;

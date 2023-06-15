@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import SectionTitle from '../components/SectionTitle';
 import FormControl from '../components/FormControl';
@@ -17,6 +17,7 @@ const Register = () => {
     gender: '',
     age: '',
   });
+  const [isPassShown, setIsPassShown] = useState(false);
 
   const handleOnchange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -89,6 +90,8 @@ const Register = () => {
       >
         <div className='space-y-8'>
           <div className='flex gap-2'>
+
+            {/* First Name */}
             <FormControl.fieldSet className='basis-1/2'>
               <FormControl.Input
                 type='text'
@@ -101,6 +104,8 @@ const Register = () => {
               <FormControl.label htmlFor='firstName'>
                 First Name
               </FormControl.label>
+
+              {/* Last Name */}
             </FormControl.fieldSet>
             <FormControl.fieldSet className='basis-1/2'>
               <FormControl.Input
@@ -116,6 +121,8 @@ const Register = () => {
               </FormControl.label>
             </FormControl.fieldSet>
           </div>
+          
+          {/* USer Name */}
           <FormControl.fieldSet>
             <FormControl.Input
               type='text'
@@ -128,6 +135,8 @@ const Register = () => {
             <FormControl.label htmlFor='User Name'>User Name</FormControl.label>
           </FormControl.fieldSet>
           <div className='flex gap-2'>
+
+            {/* Gender */}
             <FormControl.fieldSet className='basis-1/2'>
               <FormControl.select
                 options={['Male', 'Female', 'Other']}
@@ -137,6 +146,8 @@ const Register = () => {
                 onChange={handleOnchange}
               />
             </FormControl.fieldSet>
+
+              {/* Age */}
             <FormControl.fieldSet className='basis-1/2'>
               <FormControl.Input
                 type='text'
@@ -149,6 +160,8 @@ const Register = () => {
               <FormControl.label>Age</FormControl.label>
             </FormControl.fieldSet>
           </div>
+
+          {/* Email */}
           <FormControl.fieldSet>
             <FormControl.Input
               type='email'
@@ -160,7 +173,9 @@ const Register = () => {
             />
             <FormControl.label htmlFor='email'>Email</FormControl.label>
           </FormControl.fieldSet>
-          <FormControl.fieldSet>
+
+          {/* Password */}
+          <FormControl.fieldSet className='relative'>
             <FormControl.Input
               type='password'
               placeholder='password'
@@ -171,6 +186,8 @@ const Register = () => {
             />
             <FormControl.label htmlFor='password'>Password</FormControl.label>
           </FormControl.fieldSet>
+
+          {/* Confirm password */}
           <FormControl.fieldSet>
             <FormControl.Input
               type='password'
@@ -187,7 +204,7 @@ const Register = () => {
           <Button>Submit</Button>
         </div>
       </form>
-      <p className='text-sm mt-8'>
+      <p className='mt-8 text-sm'>
         If you are already registered, please click{' '}
         <Link
           to='/signin'

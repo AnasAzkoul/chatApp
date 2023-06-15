@@ -18,7 +18,7 @@ const Select = ({
     <select
       id={id}
       value={value}
-      className={`${className}`}
+      className={`${className} rounded-md focus:ring-0`}
       name={name}
       onChange={onChange}
       {...props}

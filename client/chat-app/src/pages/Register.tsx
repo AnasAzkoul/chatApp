@@ -1,84 +1,12 @@
-import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import SectionTitle from '../components/SectionTitle';
 import FormControl from '../components/FormControl';
 import Button from '../components/Button';
-import { Link } from 'react-router-dom';
-import { NewUserTypes, newUser } from '../utils/types';
+import useRegisterFormData from '../hooks/useFormData';
 
 const Register = () => {
-  const [formData, setFormData] = useState<NewUserTypes>({
-    userName: '',
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    confirmPassword: '',
-    gender: '',
-    age: '',
-  });
-  const [isPassShown, setIsPassShown] = useState(false);
-
-  const handleOnchange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const value = e.target.value;
-    const name = e.target.name;
-
-    setFormData((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Validation
-    const isValid = newUser.safeParse(formData);
-
-    if (!isValid) {
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      return;
-    }
-
-    const ageNum = parseInt(formData.age);
-
-    // eslint-disable-next-line no-constant-condition
-    if (!(typeof ageNum === 'number')) {
-      console.log('please enter a number');
-      return;
-    }
-
-    // POST Request
-    const response = await fetch(
-      'http://localhost:5003/api/v1/users/register',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      }
-    );
-
-    const data = await response.json();
-
-    setFormData({
-      userName: '',
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      confirmPassword: '',
-      gender: '',
-      age: '',
-    });
-  };
+  const {formData, handleOnchange, handleSubmit} = useRegisterFormData()
 
   return (
     <Layout>
@@ -88,40 +16,35 @@ const Register = () => {
         noValidate
         onSubmit={(e) => handleSubmit(e)}
       >
-        <div className='space-y-8'>
-          <div className='flex gap-2'>
+        <div className='grid grid-flow-row gap-y-8'>
+          {/* First Name */}
+          <FormControl.fieldSet className='basis-1/2'>
+            <FormControl.Input
+              type='text'
+              placeholder='first name'
+              id='firstName'
+              value={formData.firstName}
+              name='firstName'
+              onChange={handleOnchange}
+            />
+            <FormControl.label htmlFor='firstName'>
+              First Name
+            </FormControl.label>
 
-            {/* First Name */}
-            <FormControl.fieldSet className='basis-1/2'>
-              <FormControl.Input
-                type='text'
-                placeholder='first name'
-                id='firstName'
-                value={formData.firstName}
-                name='firstName'
-                onChange={handleOnchange}
-              />
-              <FormControl.label htmlFor='firstName'>
-                First Name
-              </FormControl.label>
+            {/* Last Name */}
+          </FormControl.fieldSet>
+          <FormControl.fieldSet className='basis-1/2'>
+            <FormControl.Input
+              type='text'
+              placeholder='last name'
+              id='lastName'
+              value={formData.lastName}
+              name='lastName'
+              onChange={handleOnchange}
+            />
+            <FormControl.label htmlFor='Last Name'>Last Name</FormControl.label>
+          </FormControl.fieldSet>
 
-              {/* Last Name */}
-            </FormControl.fieldSet>
-            <FormControl.fieldSet className='basis-1/2'>
-              <FormControl.Input
-                type='text'
-                placeholder='last name'
-                id='lastName'
-                value={formData.lastName}
-                name='lastName'
-                onChange={handleOnchange}
-              />
-              <FormControl.label htmlFor='Last Name'>
-                Last Name
-              </FormControl.label>
-            </FormControl.fieldSet>
-          </div>
-          
           {/* USer Name */}
           <FormControl.fieldSet>
             <FormControl.Input
@@ -134,32 +57,30 @@ const Register = () => {
             />
             <FormControl.label htmlFor='User Name'>User Name</FormControl.label>
           </FormControl.fieldSet>
-          <div className='flex gap-2'>
 
-            {/* Gender */}
-            <FormControl.fieldSet className='basis-1/2'>
-              <FormControl.select
-                options={['Male', 'Female', 'Other']}
-                name='gender'
-                id='gender'
-                value={formData.gender}
-                onChange={handleOnchange}
-              />
-            </FormControl.fieldSet>
+          {/* Gender */}
+          <FormControl.fieldSet className='basis-1/2'>
+            <FormControl.select
+              options={['Male', 'Female', 'Other']}
+              name='gender'
+              id='gender'
+              value={formData.gender}
+              onChange={handleOnchange}
+            />
+          </FormControl.fieldSet>
 
-              {/* Age */}
-            <FormControl.fieldSet className='basis-1/2'>
-              <FormControl.Input
-                type='text'
-                placeholder='age'
-                id='age'
-                name='age'
-                value={formData.age}
-                onChange={handleOnchange}
-              />
-              <FormControl.label>Age</FormControl.label>
-            </FormControl.fieldSet>
-          </div>
+          {/* Age */}
+          <FormControl.fieldSet className='basis-1/2'>
+            <FormControl.Input
+              type='text'
+              placeholder='age'
+              id='age'
+              name='age'
+              value={formData.age}
+              onChange={handleOnchange}
+            />
+            <FormControl.label>Age</FormControl.label>
+          </FormControl.fieldSet>
 
           {/* Email */}
           <FormControl.fieldSet>

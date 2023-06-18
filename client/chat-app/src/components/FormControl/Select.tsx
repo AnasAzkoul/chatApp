@@ -18,7 +18,7 @@ const Select = ({
     <select
       id={id}
       value={value}
-      className={`${className} rounded-md focus:ring-0`}
+      className={`${className} rounded-md focus:ring-0 border border-gray-300 text-gray-300`}
       name={name}
       onChange={onChange}
       {...props}
@@ -35,6 +35,7 @@ const Select = ({
           <option
             value={item}
             key={index}
+            className='capitalize'
           >
             {item}
           </option>

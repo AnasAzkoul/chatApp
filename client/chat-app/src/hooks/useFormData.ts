@@ -1,7 +1,16 @@
 import { useState } from 'react';
-import { NewUserTypes, newUser } from '../utils/types';
+import { ZodError} from 'zod';
+import { submitFormData } from '../utils/api';
+import { fromZodError } from 'zod-validation-error';
+import {
+  type NewUserTypes,
+  newUser,
+  type FormErrorTypes,
+} from '../utils/types';
 
 const useRegisterFormData = () => {
+  const [errors, setErrors] = useState<FormErrorTypes>({});
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<NewUserTypes>({
     userName: '',
     email: '',
@@ -9,7 +18,7 @@ const useRegisterFormData = () => {
     firstName: '',
     lastName: '',
     confirmPassword: '',
-    gender: '',
+    gender: 'male',
     age: '',
   });
 
@@ -27,57 +36,38 @@ const useRegisterFormData = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Validation
-    const isValid = newUser.safeParse(formData);
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   // validate form data
+  //   try {
+  //     newUser.parse(formData);
+  //   } catch (error) {
+  //     if (error instanceof ZodError) {
+  //       const validationError = fromZodError(error);
+  //       const errorData = validationError.details.map((issue) => ({
+  //         [issue.path[0]]:issue.message,
+  //       }));
+  //       console.log(errorData)
+  //     }
+  //   }
+  // };
 
-    if (!isValid) {
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      return;
-    }
-
-    const ageNum = parseInt(formData.age);
-
-    // eslint-disable-next-line no-constant-condition
-    if (!(typeof ageNum === 'number')) {
-      console.log('please enter a number');
-      return;
-    }
-
-    // POST Request
-    const response = await fetch(
-      'http://localhost:5003/api/v1/users/register',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      }
-    );
-
-    const data = await response.json();
-
-    setFormData({
-      userName: '',
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      confirmPassword: '',
-      gender: '',
-      age: '',
-    });
-  };
+  setFormData({
+    userName: '',
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    confirmPassword: '',
+    gender: 'male',
+    age: '',
+  });
 
   return {
     formData,
     handleOnchange,
-    handleSubmit,
+    // handleSubmit,
+    loading,
   };
 };
 

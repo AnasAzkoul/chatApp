@@ -1,139 +1,158 @@
+import { ChangeEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import SectionTitle from '../components/SectionTitle';
 import FormControl from '../components/FormControl';
 import Button from '../components/Button';
-import useRegisterFormData from '../hooks/useFormData';
+import { newUser, NewUserTypes } from '../utils/types';
 
 const Register = () => {
-  const {formData, handleOnchange, handleSubmit} = useRegisterFormData()
+  const [formData, setFormData] = useState<NewUserTypes>({
+    firstName: '',
+    lastName: '',
+    userName: '',
+    email: '',
+    gender: 'male',
+    age: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [show, setShow] = useState({ pass: false, cPass: false });
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    e.preventDefault();
+
+    const { value, name } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+  };
 
   return (
     <Layout>
-      <SectionTitle>Register</SectionTitle>
+      {/* title */}
+      <div>
+        <SectionTitle>Register</SectionTitle>
+      </div>
+
+      {/* Form */}
       <form
-        className='w-full'
-        noValidate
-        onSubmit={(e) => handleSubmit(e)}
+        className='grid w-3/4 grid-cols-none mx-auto gap-y-10 md:grid-cols-2 md:gap-x-4'
+        onSubmit={handleSubmit}
       >
-        <div className='grid grid-flow-row gap-y-8'>
-          {/* First Name */}
-          <FormControl.fieldSet className='basis-1/2'>
-            <FormControl.Input
-              type='text'
-              placeholder='first name'
-              id='firstName'
-              value={formData.firstName}
-              name='firstName'
-              onChange={handleOnchange}
-            />
-            <FormControl.label htmlFor='firstName'>
-              First Name
-            </FormControl.label>
+        {/* first name */}
+        <FormControl.fieldSet className='md:col-span-1'>
+          <FormControl.Input
+            type='text'
+            placeholder='first name'
+            name='firstName'
+            id='firstName'
+            value={formData.firstName}
+            onChange={handleChange}
+          />
+          <FormControl.label>first name</FormControl.label>
+        </FormControl.fieldSet>
 
-            {/* Last Name */}
-          </FormControl.fieldSet>
-          <FormControl.fieldSet className='basis-1/2'>
-            <FormControl.Input
-              type='text'
-              placeholder='last name'
-              id='lastName'
-              value={formData.lastName}
-              name='lastName'
-              onChange={handleOnchange}
-            />
-            <FormControl.label htmlFor='Last Name'>Last Name</FormControl.label>
-          </FormControl.fieldSet>
+        {/* Last Name */}
+        <FormControl.fieldSet className='md:col-span-1'>
+          <FormControl.Input
+            type='text'
+            placeholder='last name'
+            name='lastName'
+            id='lastName'
+            value={formData.lastName}
+            onChange={handleChange}
+          />
+          <FormControl.label>last name</FormControl.label>
+        </FormControl.fieldSet>
 
-          {/* USer Name */}
-          <FormControl.fieldSet>
-            <FormControl.Input
-              type='text'
-              placeholder='user Name'
-              id='userName'
-              value={formData.userName}
-              name='userName'
-              onChange={handleOnchange}
-            />
-            <FormControl.label htmlFor='User Name'>User Name</FormControl.label>
-          </FormControl.fieldSet>
+        {/* user name */}
+        <FormControl.fieldSet className='md:col-span-2'>
+          <FormControl.Input
+            type='text'
+            placeholder='user name'
+            name='userName'
+            id='userName'
+            value={formData.userName}
+            onChange={handleChange}
+          />
+          <FormControl.label>user name</FormControl.label>
+        </FormControl.fieldSet>
 
-          {/* Gender */}
-          <FormControl.fieldSet className='basis-1/2'>
-            <FormControl.select
-              options={['Male', 'Female', 'Other']}
-              name='gender'
-              id='gender'
-              value={formData.gender}
-              onChange={handleOnchange}
-            />
-          </FormControl.fieldSet>
+        {/* age */}
+        <FormControl.fieldSet className='md:col-span-1'>
+          <FormControl.Input
+            type='text'
+            placeholder='age'
+            name='age'
+            id='age'
+            value={formData.age}
+            onChange={handleChange}
+          />
+          <FormControl.label>age</FormControl.label>
+        </FormControl.fieldSet>
 
-          {/* Age */}
-          <FormControl.fieldSet className='basis-1/2'>
-            <FormControl.Input
-              type='text'
-              placeholder='age'
-              id='age'
-              name='age'
-              value={formData.age}
-              onChange={handleOnchange}
-            />
-            <FormControl.label>Age</FormControl.label>
-          </FormControl.fieldSet>
+        {/* gender */}
+        <FormControl.fieldSet className='md:col-span-1'>
+          <FormControl.select
+            options={['male', 'female', 'other']}
+            name='gender'
+            placeholder='gender'
+            value={formData.gender}
+            onChange={handleChange}
+          />
+        </FormControl.fieldSet>
 
-          {/* Email */}
-          <FormControl.fieldSet>
-            <FormControl.Input
-              type='email'
-              placeholder='email'
-              id='email'
-              name='email'
-              value={formData.email}
-              onChange={handleOnchange}
-            />
-            <FormControl.label htmlFor='email'>Email</FormControl.label>
-          </FormControl.fieldSet>
+        {/* email */}
+        <FormControl.fieldSet className='md:col-span-2'>
+          <FormControl.Input
+            type='email'
+            placeholder='email'
+            name='email'
+            id='email'
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <FormControl.label>email</FormControl.label>
+        </FormControl.fieldSet>
 
-          {/* Password */}
-          <FormControl.fieldSet className='relative'>
-            <FormControl.Input
-              type='password'
-              placeholder='password'
-              id='password'
-              name='password'
-              value={formData.password}
-              onChange={handleOnchange}
-            />
-            <FormControl.label htmlFor='password'>Password</FormControl.label>
-          </FormControl.fieldSet>
+        {/* password */}
+        <FormControl.fieldSet className='md:col-span-2'>
+          <FormControl.Input
+            type='password'
+            placeholder='password'
+            name='password'
+            id='password'
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <FormControl.label>password</FormControl.label>
+        </FormControl.fieldSet>
 
-          {/* Confirm password */}
-          <FormControl.fieldSet>
-            <FormControl.Input
-              type='password'
-              placeholder='confirm password'
-              id='confirmPassword'
-              name='confirmPassword'
-              value={formData.confirmPassword}
-              onChange={handleOnchange}
-            />
-            <FormControl.label htmlFor='confirmPassword'>
-              Confirm Password
-            </FormControl.label>
-          </FormControl.fieldSet>
-          <Button>Submit</Button>
+        {/* confirm password */}
+        <FormControl.fieldSet className='md:col-span-2'>
+          <FormControl.Input
+            type='password'
+            placeholder='confirmPassword'
+            name='confirmPassword'
+            id='confirmPassword'
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+          <FormControl.label>confirm password</FormControl.label>
+        </FormControl.fieldSet>
+
+        {/* submit Button */}
+        <div className='md:col-span-2'>
+          <Button className='font-semibold text-gray-100 transition-colors duration-150 ease-in bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-l' >
+            Submit
+          </Button>
         </div>
       </form>
-      <p className='mt-8 text-sm'>
-        If you are already registered, please click{' '}
-        <Link
-          to='/signin'
-          className='text-sky-500'
-        >
-          here.
-        </Link>
-      </p>
     </Layout>
   );
 };

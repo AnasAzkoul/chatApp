@@ -6,8 +6,8 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <main className='bg-blue-50'>
-      <div className='flex flex-col items-center justify-center p-4 m-auto sm:w-1/2 md:w-1/3'>
+    <main className='p-1 bg-blue-100'>
+      <div className='flex flex-col items-center justify-center w-3/4 py-10 mx-auto my-20 bg-gray-50'>
         {children}
       </div>
     </main>

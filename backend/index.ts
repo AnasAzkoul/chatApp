@@ -1,15 +1,14 @@
 import express from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
-import cors from 'cors'
+import cors from 'cors';
 import dotEnv from 'dotenv';
 import cookieParser from 'cookie-parser';
 dotEnv.config();
 
-import userRouter from './routes/userRoutes.js';
-import { notFound, errorHandler } from './middleware/errorMiddleWare.js';
-import connectDB from './config/db.js';
-
+import userRouter from './src/routes/userRoutes';
+import { notFound, errorHandler } from './src/middleware/errorMiddleWare';
+import connectDB from './src/config/db';
 
 connectDB();
 
@@ -18,8 +17,8 @@ const port = 5003;
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(cookieParser())
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 // Routes
 app.use('/api/v1/users', userRouter);
 
@@ -47,15 +46,10 @@ io.on('connection', (socket) => {
 
   // runs when a user disconnects;
   socket.on('disconnect', () => {
-    io.emit('message', 'A user has disconnected')
-  })
-})
+    io.emit('message', 'A user has disconnected');
+  });
+});
 
-
-httpServer.listen(port, (err) => {
-  if(err) {
-    console.log(err)
-  }
-
-  console.log(`server started on PORT: ${port}`)
+httpServer.listen(port, () => {
+  console.log(`server started on PORT: ${port}`);
 });

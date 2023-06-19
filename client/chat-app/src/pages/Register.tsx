@@ -4,6 +4,7 @@ import SectionTitle from '../components/SectionTitle';
 import FormControl from '../components/FormControl';
 import Button from '../components/Button';
 import useRegisterFormData from '../hooks/useFormData';
+import { ThreeDots } from 'react-loader-spinner';
 
 const Register = () => {
   const {
@@ -11,6 +12,8 @@ const Register = () => {
     handlePasswordToggle,
     handleConfirmPasswordToggle,
     passwordType,
+    loading,
+    errorResponse,
   } = useRegisterFormData();
 
   return (
@@ -214,8 +217,27 @@ const Register = () => {
         {/* submit Button */}
         <div className='md:col-span-2'>
           <Button className='font-semibold text-white transition-colors duration-150 ease-in bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-l'>
-            Sign Up
+            <div className='flex justify-center w-full gap-4'>
+              {loading ? (
+                <ThreeDots
+                  height='30'
+                  width='30'
+                  radius='9'
+                  color='#E0E0E0'
+                  ariaLabel='three-dots-loading'
+                />
+              ) : (
+                <span>Sign up</span>
+              )}
+            </div>
           </Button>
+          {errorResponse !== null ? (
+            <FormControl.errorMessage>
+              something went wrong
+            </FormControl.errorMessage>
+          ) : (
+            <></>
+          )}
         </div>
       </form>
       <div className='w-3/4 pt-5 text-left text-gray-400'>

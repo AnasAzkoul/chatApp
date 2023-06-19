@@ -10,6 +10,7 @@ const ShowPassBtn = ({ className, onClick }: ShowPasswordProps) => {
     <button
       onClick={onClick}
       className={`${className} absolute right-3 top-3`}
+      type='button'
     >
       {/* {show ? <AiFillEyeInvisible /> : <AiFillEye />} */}
       <AiFillEyeInvisible />

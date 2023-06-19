@@ -24,21 +24,47 @@ const SignIn = () => {
               type='email'
               placeholder='email'
               id='email'
+              className={`${
+                formik.errors.email && formik.touched.email
+                  ? 'border-rose-500'
+                  : ''
+              }`}
               {...formik.getFieldProps('email')}
             />
             <FormControl.label htmlFor='email'>Email</FormControl.label>
+            {/* Error Message */}
+            {formik.errors.email && formik.touched.email ? (
+              <FormControl.errorMessage>
+                {formik.errors.email}
+              </FormControl.errorMessage>
+            ) : (
+              <></>
+            )}
           </FormControl.fieldSet>
           <FormControl.fieldSet>
             <FormControl.Input
               type={`${passwordType}`}
               id='password'
               placeholder='password'
+              className={`${
+                formik.errors.password && formik.touched.password
+                  ? 'border-rose-500'
+                  : ''
+              }`}
               {...formik.getFieldProps('password')}
             />
             <FormControl.label htmlFor='password'>Password</FormControl.label>
             <FormControl.ShowPass onClick={handleTogglePassword} />
+            {/* Error Message */}
+            {formik.errors.password && formik.touched.password ? (
+              <FormControl.errorMessage>
+                {formik.errors.password}
+              </FormControl.errorMessage>
+            ) : (
+              <></>
+            )}
           </FormControl.fieldSet>
-          <Button>Submit</Button>
+          <Button>Sign in</Button>
         </div>
       </form>
       <p className='mt-8 text-sm'>

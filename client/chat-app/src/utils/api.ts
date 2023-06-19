@@ -14,12 +14,12 @@ export const submitFormData = async <T>(formData: T) => {
 
     return {
       status: response.status,
-      data
-    }
+      data,
+    };
   } catch (error) {
-    if(error instanceof Error) {
+    if (error instanceof Error) {
       console.log(error.message);
-      return error.message
+      return error.message;
     }
   }
 };

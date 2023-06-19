@@ -1,60 +1,21 @@
-import { FormEvent, useState } from 'react';
 import Layout from '../components/Layout';
 import FormControl from '../components/FormControl';
 import Button from '../components/Button';
 import SectionTitle from '../components/SectionTitle';
 import { Link } from 'react-router-dom';
-
-interface FormDataTypes {
-  email: string;
-  password: string;
-}
+import useSigninFormData from '../hooks/useSigninFormData';
 
 const SignIn = () => {
-  const [formData, setFormData] = useState<FormDataTypes>({
-    email: '',
-    password: '',
-  });
-
-  const resetFormData = () => {
-    setFormData({ email: '', password: '' });
-  };
-
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const name = e.target.name;
-    setFormData((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  };
-
-  const handleOnSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const response = await fetch('http://localhost:5003/api/v1/users/auth', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await response.json();
-    console.log(data);
-    console.log(response.status)
-    resetFormData();
-  };
+  const { formik, passwordType, handleTogglePassword } = useSigninFormData();
 
   return (
     <Layout>
-      <SectionTitle>
-        Sign in
-      </SectionTitle>
+      <div>
+        <SectionTitle>Sign in</SectionTitle>
+      </div>
       <form
-        onSubmit={handleOnSubmit}
-        className='w-full'
+        onSubmit={formik.handleSubmit}
+        className='grid w-1/2 mx-auto gap-y-10'
         noValidate
       >
         <div className='space-y-8'>
@@ -63,27 +24,32 @@ const SignIn = () => {
               type='email'
               placeholder='email'
               id='email'
-              onChange={handleOnChange}
-              name='email'
-              value={formData.email}
+              {...formik.getFieldProps('email')}
             />
             <FormControl.label htmlFor='email'>Email</FormControl.label>
           </FormControl.fieldSet>
           <FormControl.fieldSet>
             <FormControl.Input
-              type='password'
+              type={`${passwordType}`}
               id='password'
               placeholder='password'
-              onChange={handleOnChange}
-              name='password'
-              value={formData.password}
+              {...formik.getFieldProps('password')}
             />
             <FormControl.label htmlFor='password'>Password</FormControl.label>
+            <FormControl.ShowPass onClick={handleTogglePassword} />
           </FormControl.fieldSet>
           <Button>Submit</Button>
         </div>
       </form>
-      <p className='text-sm mt-8'>If this is your first time, please register <Link to='/register' className='text-sky-500'>here.</Link></p>
+      <p className='mt-8 text-sm'>
+        If this is your first time, please register{' '}
+        <Link
+          to='/register'
+          className='text-sky-500'
+        >
+          here.
+        </Link>
+      </p>
     </Layout>
   );
 };

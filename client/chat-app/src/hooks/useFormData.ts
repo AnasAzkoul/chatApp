@@ -1,73 +1,75 @@
 import { useState } from 'react';
-import { ZodError} from 'zod';
+import { FormikValues, useFormik } from 'formik';
+import {validate} from '../utils/validate';
 import { submitFormData } from '../utils/api';
-import { fromZodError } from 'zod-validation-error';
-import {
-  type NewUserTypes,
-  newUser,
-  type FormErrorTypes,
-} from '../utils/types';
+import { ValidationError } from 'zod-validation-error';
+
+
 
 const useRegisterFormData = () => {
-  const [errors, setErrors] = useState<FormErrorTypes>({});
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<NewUserTypes>({
-    userName: '',
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    confirmPassword: '',
-    gender: 'male',
-    age: '',
+  const [passwordType, setPasswordType] = useState({
+    password: 'password',
+    confirmPassword: 'password',
   });
 
-  const handleOnchange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const value = e.target.value;
-    const name = e.target.name;
+  const errors = {}
 
-    setFormData((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      userName: '',
+      email: '',
+      gender: 'male',
+      age: '',
+      password: '',
+      confirmPassword: '',
+    },
+    validate: (values) => validate(values, errors),
+    onSubmit: (values) => handleSubmit(values),
+  });
+
+  const handleSubmit = (values: FormikValues) => {
+    console.log(values);
+  };
+
+  const handlePasswordToggle = () => {
+    setPasswordType((prev) => {
+      if (prev.password === 'password') {
+        return {
+          ...prev,
+          password: 'text',
+        };
+      } else {
+        return {
+          ...prev,
+          password: 'password',
+        };
+      }
     });
   };
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   // validate form data
-  //   try {
-  //     newUser.parse(formData);
-  //   } catch (error) {
-  //     if (error instanceof ZodError) {
-  //       const validationError = fromZodError(error);
-  //       const errorData = validationError.details.map((issue) => ({
-  //         [issue.path[0]]:issue.message,
-  //       }));
-  //       console.log(errorData)
-  //     }
-  //   }
-  // };
-
-  setFormData({
-    userName: '',
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    confirmPassword: '',
-    gender: 'male',
-    age: '',
-  });
+  const handleConfirmPasswordToggle = () => {
+    setPasswordType((prev) => {
+      if (prev.confirmPassword === 'password') {
+        return {
+          ...prev,
+          confirmPassword: 'text',
+        };
+      } else {
+        return {
+          ...prev,
+          confirmPassword: 'password',
+        };
+      }
+    });
+  };
 
   return {
-    formData,
-    handleOnchange,
-    // handleSubmit,
-    loading,
+    formik,
+    handlePasswordToggle,
+    handleConfirmPasswordToggle,
+    passwordType,
   };
 };
 

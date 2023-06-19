@@ -4,6 +4,7 @@ import Fieldset from './Fieldset';
 import Label from './Label';
 import Select from './Select';
 import ShowPassBtn from './ShowPassBtn';
+import ErrorMessage from './ErrorMessage';
 
 type FormControlProps = {
   children: React.ReactNode;
@@ -19,5 +20,6 @@ FormControl.Input = Input;
 FormControl.label = Label;
 FormControl.select = Select;
 FormControl.ShowPass = ShowPassBtn
+FormControl.errorMessage = ErrorMessage; 
 
 export default FormControl;

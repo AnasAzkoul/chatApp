@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface LayoutProps {
+interface LayoutProps  {
   children: React.ReactNode;
 }
 

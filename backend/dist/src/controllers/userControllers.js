@@ -14,8 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUserProfile = exports.getUserProfile = exports.logoutUser = exports.registerUser = exports.authUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
-const user_js_1 = __importDefault(require("../model/user.js"));
+const user_1 = __importDefault(require("../model/user"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const generateToken_1 = __importDefault(require("../utils/generateToken"));
 // @desc   Auth user / set token
 // route   api/v1/users/auth
 // access  public
@@ -29,13 +30,13 @@ exports.authUser = (0, express_async_handler_1.default)((req, res) => __awaiter(
 // access  public
 exports.registerUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { firstName, lastName, userName, gender, age, email, password } = req.body;
-    const userExists = yield user_js_1.default.findOne({ email });
+    const userExists = yield user_1.default.findOne({ email });
     if (userExists) {
         throw new Error('user already exists');
     }
     const salt = yield bcryptjs_1.default.genSalt(10);
     const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
-    const user = yield user_js_1.default.create({
+    const user = yield user_1.default.create({
         firstName,
         lastName,
         userName,
@@ -45,9 +46,11 @@ exports.registerUser = (0, express_async_handler_1.default)((req, res) => __awai
         password: hashedPassword,
     });
     if (user) {
+        (0, generateToken_1.default)(res, user._id);
         res.status(201).json({
             id: user._id,
             userName: user.userName,
+            email: user.email,
         });
     }
     else {

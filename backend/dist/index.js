@@ -16,7 +16,10 @@ const db_1 = __importDefault(require("./src/config/db"));
 (0, db_1.default)();
 const port = 5003;
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:5173',
+    credentials: true, //access-control-allow-credentials:true
+}));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());

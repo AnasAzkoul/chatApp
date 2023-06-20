@@ -1,5 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
-import bcrypt from 'bcryptjs';
+import mongoose, { InferSchemaType, Schema } from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -45,6 +44,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-
+export type UserType = InferSchemaType<typeof userSchema>
 
 export default User;

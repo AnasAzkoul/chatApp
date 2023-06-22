@@ -11,9 +11,6 @@ export const submitFormData = async <T>(formData: T) => {
       body: JSON.stringify(formData),
       credentials: 'include',
     });
-    console.log(response.status);
-
-    console.log(response.statusText);
 
     const data = await response.json();
 
@@ -21,6 +18,8 @@ export const submitFormData = async <T>(formData: T) => {
 
     return {
       status: response.status,
+      ok: response.ok,
+      text: response.statusText,
       data,
     };
   } catch (error) {
@@ -30,3 +29,33 @@ export const submitFormData = async <T>(formData: T) => {
     }
   }
 };
+
+export const submitSigninData = async <T>(values: T) => {
+  try {
+    const response = await fetch(`${BASE_URL}/users/auth`, {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values)
+    });
+
+    const data = response.json();
+    return {
+      status: response.status,
+      ok: response.ok,
+      text: response.statusText,
+      data
+    }
+  } catch (error) {
+    if(error instanceof Error) {
+      return {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      }
+    }
+  }
+}

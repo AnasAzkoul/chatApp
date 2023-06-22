@@ -16,14 +16,36 @@ exports.updateUserProfile = exports.getUserProfile = exports.logoutUser = export
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const user_1 = __importDefault(require("../model/user"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const generateToken_1 = __importDefault(require("../utils/generateToken"));
+const hashPassword_1 = require("../utils/hashPassword");
 // @desc   Auth user / set token
 // route   api/v1/users/auth
 // access  public
 exports.authUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
-    console.log(email, password);
-    res.status(201).json('Auth user');
+    const userExists = yield user_1.default.findOne({ email });
+    const isPassword = yield (0, hashPassword_1.matchPassword)(password, userExists === null || userExists === void 0 ? void 0 : userExists.password);
+    if (userExists && isPassword) {
+        // @ts-ignore
+        req.session.user = {
+            id: userExists._id,
+            userName: userExists.userName,
+            firstName: userExists.firstName,
+            lastName: userExists.lastName,
+            email: userExists.email,
+        };
+        // @ts-ignore
+        req.session.isAuth = true;
+        console.log(req.session);
+        res.status(201).json({
+            id: userExists._id,
+            userName: userExists.userName,
+            email: userExists.email,
+        });
+    }
+    else {
+        res.status(401);
+        throw new Error('Invalid email or password');
+    }
 }));
 // @desc   Register a new user
 // route   api/v1/users/register
@@ -46,7 +68,17 @@ exports.registerUser = (0, express_async_handler_1.default)((req, res) => __awai
         password: hashedPassword,
     });
     if (user) {
-        (0, generateToken_1.default)(res, user._id);
+        // @ts-ignore
+        req.session.user = {
+            id: user._id,
+            userName: user.userName,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
+        };
+        // @ts-ignore
+        req.session.isAuth = true;
+        console.log(req.session);
         res.status(201).json({
             id: user._id,
             userName: user.userName,
@@ -62,9 +94,10 @@ exports.registerUser = (0, express_async_handler_1.default)((req, res) => __awai
 // route   api/v1/users/logout
 // access  public
 exports.logoutUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
-    console.log(email, password);
-    res.status(201).json('Logout user');
+    req.session.destroy((error) => {
+    });
+    console.log(req.session);
+    res.status(200).json({ message: 'user logged out' });
 }));
 // @desc   get a user's profile
 // route   api/v1/users/profile

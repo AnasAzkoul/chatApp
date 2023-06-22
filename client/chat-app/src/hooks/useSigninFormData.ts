@@ -1,10 +1,16 @@
 import { useState } from 'react';
 import { FormikValues, useFormik } from 'formik';
 import { validateSigninForm } from '../utils/validate';
-import { submitFormData } from '../utils/api';
+import { submitSigninData } from '../utils/api';
+import { useNavigate } from 'react-router-dom';
 
 function useSigninFormData() {
+  const [loading, setLoading] = useState(false);
+  const [errorResponse, setErrorResponse] = useState<string | undefined>(
+    undefined
+  );
   const [passwordType, setPasswordType] = useState<string>('password');
+  const navigate = useNavigate();
 
   const errors = {};
 
@@ -17,8 +23,28 @@ function useSigninFormData() {
     onSubmit: (values) => handleSubmit(values),
   });
 
-  const handleSubmit = (values: FormikValues) => {
-    console.log(values);
+  const handleSubmit = async (values: FormikValues) => {
+    setLoading(true);
+    try {
+      const response = await submitSigninData(values);
+      if (typeof response === 'object') {
+        if (response.status !== 201) {
+          formik.resetForm();
+          setLoading(false);
+          setErrorResponse(response.message);
+        } else {
+          formik.resetForm();
+          setLoading(false);
+          navigate('/');
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        console.log(error.stack);
+        formik.resetForm();
+      }
+    }
   };
 
   const handleTogglePassword = () => {
@@ -36,8 +62,9 @@ function useSigninFormData() {
     errors,
     passwordType,
     handleTogglePassword,
+    loading,
+    errorResponse,
   };
 }
 
-
-export default useSigninFormData
+export default useSigninFormData;

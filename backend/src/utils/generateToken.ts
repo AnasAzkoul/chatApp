@@ -6,7 +6,7 @@ import { UserType } from '../model/user';
 const generateToken = (res: Response, userId: Types.ObjectId) => {
   const token = jwt.sign({userId}, process.env.JWT_SECRET!, {
     expiresIn: '30D'
-  })
+  }); 
 
   res.cookie('jwt', token, {
     httpOnly: true,

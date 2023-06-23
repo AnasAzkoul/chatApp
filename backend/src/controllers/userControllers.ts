@@ -4,7 +4,6 @@ import bcrypt from 'bcryptjs';
 import { Request, Response, RequestHandler } from 'express';
 import generateToken from '../utils/generateToken';
 import { matchPassword } from '../utils/hashPassword';
-import session from 'express-session';
 
 // @desc   Auth user / set token
 // route   api/v1/users/auth
@@ -17,18 +16,7 @@ export const authUser: RequestHandler = asyncHandler(async (req, res) => {
   const isPassword = await matchPassword(password, userExists?.password!);
 
   if (userExists && isPassword) {
-    // @ts-ignore
-    req.session.user = {
-      id: userExists._id,
-      userName: userExists.userName,
-      firstName: userExists.firstName,
-      lastName: userExists.lastName,
-      email: userExists.email,
-    };
-    // @ts-ignore
-    req.session.isAuth = true
-
-    console.log(req.session);
+    generateToken(res, userExists._id)
 
     res.status(201).json({
       id: userExists._id,
@@ -36,7 +24,7 @@ export const authUser: RequestHandler = asyncHandler(async (req, res) => {
       email: userExists.email,
     });
   } else {
-    res.status(401)
+    res.status(401);
     throw new Error('Invalid email or password');
   }
 });
@@ -69,20 +57,7 @@ export const registerUser: RequestHandler = asyncHandler(
     });
 
     if (user) {
-      // @ts-ignore
-      req.session.user = {
-        id: user._id,
-        userName: user.userName,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email
-      };
-
-      // @ts-ignore
-      req.session.isAuth = true
-
-      console.log(req.session);
-
+      generateToken(res, user._id);
 
       res.status(201).json({
         id: user._id,
@@ -101,12 +76,12 @@ export const registerUser: RequestHandler = asyncHandler(
 // access  public
 export const logoutUser: RequestHandler = asyncHandler(
   async (req: Request, res: Response) => {
-      req.session.destroy((error: Error) => {
-
-      })
-
-      console.log(req.session)
-    res.status(200).json({message: 'user logged out'});
+    res.cookie('jwt', '', {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    
+    res.status(200).json({ message: 'user logged out' });
   }
 );
 

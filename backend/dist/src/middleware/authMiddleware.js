@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.protectRoute = void 0;
+exports.checkToken = exports.protectRoute = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_1 = __importDefault(require("../model/user"));
 function protectRoute(req, res, next) {
@@ -40,3 +40,17 @@ function protectRoute(req, res, next) {
     });
 }
 exports.protectRoute = protectRoute;
+function checkToken(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const token = req.cookies.jwt;
+        if (token) {
+            const encoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+            if (typeof encoded === 'object') {
+                // @ts-ignore
+                req.user = yield user_1.default.findById(encoded.userId).select('-password');
+            }
+        }
+        next();
+    });
+}
+exports.checkToken = checkToken;

@@ -3,15 +3,13 @@ import { FormikValues, useFormik } from 'formik';
 import { validateSigninForm } from '../utils/validate';
 import { submitSigninData } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { error } from 'console';
 
 function useSigninFormData() {
-  const [loading, setLoading] = useState(false);
-  const [errorResponse, setErrorResponse] = useState<string | undefined>(
-    undefined
-  );
-  const [passwordType, setPasswordType] = useState<string>('password');
   const navigate = useNavigate();
 
+  const [passwordType, setPasswordType] = useState<string>('password');
   const errors = {};
 
   const formik = useFormik({
@@ -20,31 +18,17 @@ function useSigninFormData() {
       password: '',
     },
     validate: (values) => validateSigninForm(values, errors),
-    onSubmit: (values) => handleSubmit(values),
+    onSubmit: (values) => mutation.mutateAsync(values),
   });
 
-  const handleSubmit = async (values: FormikValues) => {
-    setLoading(true);
-    try {
-      const response = await submitSigninData(values);
-      if (typeof response === 'object') {
-        if (response.status !== 201) {
-          formik.resetForm();
-          setLoading(false);
-          setErrorResponse(response.message);
-        } else {
-          formik.resetForm();
-          setLoading(false);
-          navigate('/');
-        }
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        console.log(error.stack);
-        formik.resetForm();
-      }
-    }
+  const mutation = useMutation({
+    mutationFn: submitSigninData,
+    onSuccess: response => handleOnSuccess(response),
+  });
+
+  const handleOnSuccess = (response: any) => {
+    formik.resetForm();
+    navigate('/');
   };
 
   const handleTogglePassword = () => {
@@ -62,8 +46,7 @@ function useSigninFormData() {
     errors,
     passwordType,
     handleTogglePassword,
-    loading,
-    errorResponse,
+    mutation,
   };
 }
 

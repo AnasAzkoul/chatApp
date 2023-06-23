@@ -3,13 +3,13 @@ import { Server } from 'socket.io';
 import http from 'http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { protectRoute } from './src/middleware/authMiddleware';
 import dotEnv from 'dotenv';
 dotEnv.config();
 
 import userRouter from './src/routes/userRoutes';
 import { notFound, errorHandler } from './src/middleware/errorMiddleWare';
 import connectDB from './src/config/db';
+
 
 connectDB();
 const port = 5003;
@@ -38,13 +38,14 @@ const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: 'http://localhost:5173',
+    credentials: true
   },
 });
 
+
+
 io.on('connection', (socket) => {
   console.log('A user has connected');
-  // @ts-ignore
-  console.log(socket.request.user);
 
   // runs whenever the user connects;
   socket.emit('message', 'Welcome to the ChatApp');

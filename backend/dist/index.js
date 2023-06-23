@@ -33,12 +33,11 @@ const httpServer = http_1.default.createServer(app);
 const io = new socket_io_1.Server(httpServer, {
     cors: {
         origin: 'http://localhost:5173',
+        credentials: true
     },
 });
 io.on('connection', (socket) => {
     console.log('A user has connected');
-    // @ts-ignore
-    console.log(socket.request.user);
     // runs whenever the user connects;
     socket.emit('message', 'Welcome to the ChatApp');
     // runs whenever a new user connects to the app;

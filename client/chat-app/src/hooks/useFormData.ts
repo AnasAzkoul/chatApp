@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { FormikValues, useFormik } from 'formik';
 import { validate } from '../utils/validate';
-import { submitFormData } from '../utils/api';
+import { submitRegisterData } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+
+
 
 const useRegisterFormData = () => {
-  const [loading, setLoading] = useState(false);
-  const [errorResponse, setErrorResponse] = useState<string | null>(null);
+  const mutation = useMutation({
+    mutationFn: submitRegisterData,
+  })
 
   const [passwordType, setPasswordType] = useState({
     password: 'password',
@@ -33,26 +37,11 @@ const useRegisterFormData = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (values: FormikValues) => {
-    setLoading(true);
-    try {
-      const response = await submitFormData(values);
-      if (typeof response === 'object') {
-        if (response.status !== 201) {
-          formik.resetForm();
-          setLoading(false);
-          setErrorResponse(response.data);
-        } else {
-          formik.resetForm();
-          setLoading(false);
-          navigate('/');
-        }
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        console.log(error.stack);
-        formik.resetForm();
-      }
+    mutation.mutate(values);
+    console.log(mutation.isSuccess)
+    if(mutation.isSuccess === true) {
+      formik.resetForm()
+      navigate('/')
     }
   };
 
@@ -93,8 +82,7 @@ const useRegisterFormData = () => {
     handlePasswordToggle,
     handleConfirmPasswordToggle,
     passwordType,
-    loading,
-    errorResponse,
+    mutation
   };
 };
 

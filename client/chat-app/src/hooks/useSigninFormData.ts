@@ -3,10 +3,12 @@ import { FormikValues, useFormik } from 'formik';
 import { validateSigninForm } from '../utils/validate';
 import { submitSigninData } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import { error } from 'console';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 
 function useSigninFormData() {
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
 
   const [passwordType, setPasswordType] = useState<string>('password');
@@ -18,17 +20,18 @@ function useSigninFormData() {
       password: '',
     },
     validate: (values) => validateSigninForm(values, errors),
-    onSubmit: (values) => mutation.mutateAsync(values),
+    onSubmit: (values) => mutation.mutate(values),
   });
 
   const mutation = useMutation({
     mutationFn: submitSigninData,
-    onSuccess: response => handleOnSuccess(response),
+    onSuccess: (response) => handleOnSuccess(response),
   });
 
   const handleOnSuccess = (response: any) => {
     formik.resetForm();
     navigate('/');
+    queryClient.setQueryData(['user'], response);
   };
 
   const handleTogglePassword = () => {

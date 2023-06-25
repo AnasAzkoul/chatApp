@@ -20,45 +20,28 @@ export const submitSigninData = async (formData: FormikValues) => {
       body: JSON.stringify(formData),
     });
 
-    if(response.ok) {
+    if (response.ok) {
       const data = await response.json();
-      return data
+      return data;
     } else {
       return await response.json();
     }
   } catch (error) {
-    if(error instanceof Error) {
-      return error
+    if (error instanceof Error) {
+      return error;
     }
   }
 };
 
-// export const submitSigninData = async <T>(values: T) => {
-//   try {
-//     const response = await fetch(`${BASE_URL}/users/auth`, {
-//       method: 'POST',
-//       mode: 'cors',
-//       credentials: 'include',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(values),
-//     });
+export const handleLogoutUser = async () => {
+  const response = await fetch(`${BASE_URL}/users/logout`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
 
-//     const data = response.json();
-//     return {
-//       status: response.status,
-//       ok: response.ok,
-//       text: response.statusText,
-//       data,
-//     };
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       return {
-//         message: error.message,
-//         stack: error.stack,
-//         name: error.name,
-//       };
-//     }
-//   }
-// };
+  return await response.json();
+};

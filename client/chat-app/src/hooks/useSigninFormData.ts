@@ -1,17 +1,14 @@
-import { useState } from 'react';
-import { FormikValues, useFormik } from 'formik';
+import { useFormik } from 'formik';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { validateSigninForm } from '../utils/validate';
 import { submitSigninData } from '../utils/api';
-import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
+import { userKeys } from '../utils/queryKeys';
+import { type UserResponseData } from '../utils/types';
 
 function useSigninFormData() {
   const queryClient = useQueryClient();
-
   const navigate = useNavigate();
-
-  const [passwordType, setPasswordType] = useState<string>('password');
   const errors = {};
 
   const formik = useFormik({
@@ -28,27 +25,15 @@ function useSigninFormData() {
     onSuccess: (response) => handleOnSuccess(response),
   });
 
-  const handleOnSuccess = (response: any) => {
+  const handleOnSuccess = (response: UserResponseData) => {
     formik.resetForm();
     navigate('/');
-    queryClient.setQueryData(['user'], response);
-  };
-
-  const handleTogglePassword = () => {
-    setPasswordType((prev) => {
-      if (prev === 'password') {
-        return 'text';
-      } else {
-        return 'password';
-      }
-    });
+    queryClient.setQueryData(userKeys.withUserId(response.id), response);
   };
 
   return {
     formik,
     errors,
-    passwordType,
-    handleTogglePassword,
     mutation,
   };
 }

@@ -1,19 +1,16 @@
 import { Link } from 'react-router-dom';
-import Layout from '../components/Layout';
 import SectionTitle from '../components/SectionTitle';
 import FormControl from '../components/FormControl';
 import Button from '../components/Button';
-import useRegisterFormData from '../hooks/useFormData';
+import useRegisterFormData from '../hooks/useRegisterFormData';
 import { ThreeDots } from 'react-loader-spinner';
+import { useToggleRegisterPasswords } from '../hooks/useTogglePasswords';
 
 const Register = () => {
-  const {
-    formik,
-    handlePasswordToggle,
-    handleConfirmPasswordToggle,
-    passwordType,
-    mutation
-  } = useRegisterFormData();
+  const { formik, mutation } = useRegisterFormData();
+
+  const { passwordType, handleTogglePassword, handleToggleConfirmPassword } =
+    useToggleRegisterPasswords();
 
   return (
     <div className='grid grid-cols-2 bg-gray-100 h-1/2'>
@@ -187,7 +184,7 @@ const Register = () => {
               {...formik.getFieldProps('password')}
             />
             <FormControl.label>password</FormControl.label>
-            <FormControl.ShowPass onClick={handlePasswordToggle} />
+            <FormControl.ShowPass onClick={handleTogglePassword} />
             {/* Error Message */}
             {formik.errors.password && formik.touched.password ? (
               <FormControl.errorMessage>
@@ -212,7 +209,7 @@ const Register = () => {
               {...formik.getFieldProps('confirmPassword')}
             />
             <FormControl.label>confirm password</FormControl.label>
-            <FormControl.ShowPass onClick={handleConfirmPasswordToggle} />
+            <FormControl.ShowPass onClick={handleToggleConfirmPassword} />
             {/* Error Message */}
             {formik.errors.confirmPassword && formik.touched.confirmPassword ? (
               <FormControl.errorMessage>
@@ -241,9 +238,7 @@ const Register = () => {
               </div>
             </Button>
             {mutation.isError ? (
-              <FormControl.errorMessage>
-                {}
-              </FormControl.errorMessage>
+              <FormControl.errorMessage>{}</FormControl.errorMessage>
             ) : (
               <></>
             )}

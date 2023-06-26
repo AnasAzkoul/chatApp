@@ -4,10 +4,13 @@ import Button from '../components/Button';
 import SectionTitle from '../components/SectionTitle';
 import { Link } from 'react-router-dom';
 import useSigninFormData from '../hooks/useSigninFormData';
+import {useToggleSigninPassword} from '../hooks/useTogglePasswords';
 
 const SignIn = () => {
-  const { formik, passwordType, handleTogglePassword, mutation} =
+  const { formik,  mutation} =
     useSigninFormData();
+
+  const { passwordType, handleTogglePassword } = useToggleSigninPassword();
 
   return (
     <>

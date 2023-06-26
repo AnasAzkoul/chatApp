@@ -1,10 +1,8 @@
 import useSocket from '../hooks/useSocket';
 import useLogoutUser from '../hooks/useLogoutUser';
 import Button from '../components/Button';
+import { type UserResponseData } from '../utils/types';
 
-interface UserInfo {
-  [key: string]: string
-}
 
 const Home = () => {
   const { mutation, queryClient } = useLogoutUser();
@@ -14,7 +12,9 @@ const Home = () => {
     await mutation.mutate();
   };
 
-  const data = queryClient.getQueryData(['user']) as unknown as UserInfo | undefined;
+  const data = queryClient.getQueryData(['user']) as unknown as
+    | UserResponseData
+    | undefined;
 
   return (
     <div>

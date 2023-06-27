@@ -12,12 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserProfile = exports.getUserProfile = exports.logoutUser = exports.registerUser = exports.authUser = void 0;
+exports.updateUserProfile = exports.getUserProfile = exports.logoutUser = exports.registerUser = exports.authUser = exports.getAuthUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const user_1 = __importDefault(require("../model/user"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const generateToken_1 = __importDefault(require("../utils/generateToken"));
 const hashPassword_1 = require("../utils/hashPassword");
+// @desc   Auth user / set token
+// route   api/v1/users/auth
+// access  public
+exports.getAuthUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // @ts-ignore
+    const { user } = req;
+    console.log(user);
+    res.status(200).json(user);
+}));
 // @desc   Auth user / set token
 // route   api/v1/users/auth
 // access  public

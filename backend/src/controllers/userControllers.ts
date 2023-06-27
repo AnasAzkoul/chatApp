@@ -8,6 +8,18 @@ import { matchPassword } from '../utils/hashPassword';
 // @desc   Auth user / set token
 // route   api/v1/users/auth
 // access  public
+export const getAuthUser: RequestHandler = asyncHandler(async (req, res) => {
+  // @ts-ignore
+  const {user} = req;
+
+  console.log(user)
+
+  res.status(200).json(user);
+})
+
+// @desc   Auth user / set token
+// route   api/v1/users/auth
+// access  public
 export const authUser: RequestHandler = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -80,7 +92,7 @@ export const logoutUser: RequestHandler = asyncHandler(
       httpOnly: true,
       expires: new Date(0),
     });
-    
+
     res.status(200).json({ message: 'user logged out' });
   }
 );

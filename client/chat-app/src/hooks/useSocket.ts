@@ -16,18 +16,19 @@ export default function useSocket() {
       setIsConnected(true);
     });
 
+    // This method would broadcast a message tot he user thats connecting only;
     socket.on('message', (message) => {
       console.log(message);
     });
 
     return () => {
       socket.off('connect', () => {
-        setIsConnected(true);
+        setIsConnected(false);
       });
     };
   }, []);
 
   return {
-    isConnected
-  }
+    isConnected,
+  };
 }

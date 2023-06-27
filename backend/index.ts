@@ -10,7 +10,6 @@ import userRouter from './src/routes/userRoutes';
 import { notFound, errorHandler } from './src/middleware/errorMiddleWare';
 import connectDB from './src/config/db';
 
-
 connectDB();
 const port = 5003;
 const app = express();
@@ -38,22 +37,26 @@ const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: 'http://localhost:5173',
-    credentials: true
+    credentials: true,
   },
 });
-
-
 
 io.on('connection', (socket) => {
   console.log('A user has connected');
 
-  // runs whenever the user connects;
+  // runs whenever the user connects; and emits a message to the user that's connecting only;
   socket.emit('message', 'Welcome to the ChatApp');
 
-  // runs whenever a new user connects to the app;
+  // runs whenever a new user connects to the app; and emits an event to everyone except the user who's connecting
   socket.broadcast.emit('message', 'A new user has joined the chat');
 
-  // runs when a user disconnects;
+  // Listening to the chat message;
+  socket.on('chatMessage', (msg) => {
+    console.log(msg)
+    io.emit('message', msg);
+  })
+
+  // runs when a user disconnects; emits events to all users on this connection;
   socket.on('disconnect', () => {
     io.emit('message', 'A user has disconnected');
   });

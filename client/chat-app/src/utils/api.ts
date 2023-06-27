@@ -6,17 +6,21 @@ import { type UserResponseData } from './types';
 export const submitRegisterData = async (
   formData: FormikValues
 ): Promise<UserResponseData> => {
-  return await axios.post(`${BASE_URL}/users/register`, formData, {
+  const response = await axios.post(`${BASE_URL}/users/register`, formData, {
     withCredentials: true,
   });
+
+  return response.data;
 };
 
 export const submitSigninData = async (
   formData: FormikValues
 ): Promise<UserResponseData> => {
-  return await axios.post(`${BASE_URL}/users/auth`, formData, {
+  const response = await axios.post(`${BASE_URL}/users/auth`, formData, {
     withCredentials: true,
   });
+
+  return response.data;
 };
 
 export const handleLogoutUser = async () => {
@@ -32,25 +36,10 @@ export const handleLogoutUser = async () => {
   return await response.json();
 };
 
-// try {
-//   const response = await fetch(`${BASE_URL}/users/auth`, {
-//     method: 'POST',
-//     mode: 'cors',
-//     credentials: 'include',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify(formData),
-//   });
-
-//   if (response.ok) {
-//     const data = await response.json();
-//     return data;
-//   } else {
-//     return await response.json();
-//   }
-// } catch (error) {
-//   if (error instanceof Error) {
-//     return error;
-//   }
-// }
+export const getAuthUser = async () => {
+  const response = axios.get(`${BASE_URL}/users/auth`, {
+    withCredentials: true,
+  });
+  const data = (await response).data;
+  return data;
+};

@@ -5,12 +5,13 @@ import {
   logoutUser,
   getUserProfile,
   updateUserProfile,
+  getAuthUser
 } from '../controllers/userControllers.js';
 import { protectRoute } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/auth', authUser);
+router.route('/auth').post(authUser).get(protectRoute, getAuthUser);
 
 router.post('/register', registerUser);
 

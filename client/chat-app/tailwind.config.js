@@ -3,7 +3,11 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateRows: {
+        'chatLayout': 'auto minmax(382px, 1fr) auto'
+      }
+    },
   },
   // eslint-disable-next-line no-undef
   plugins: [

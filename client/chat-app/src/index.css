@@ -3,5 +3,9 @@
 @tailwind utilities;
 
 body {
-  @apply flex items-center justify-center h-screen bg-blue-100;
+  @apply  flex items-center justify-center h-screen bg-blue-100;
+}
+
+#root {
+  @apply flex items-center justify-center w-full h-full;
 }

@@ -14,7 +14,7 @@ const SignIn = () => {
 
   return (
     <>
-      <div className='grid grid-cols-2 bg-gray-100 h-1/2'>
+      <div className='grid grid-cols-2 bg-gray-100'>
         <div className='aspect-h-5 aspect-w-4'>
           <img
             src='./src/assets/chat.jpg'

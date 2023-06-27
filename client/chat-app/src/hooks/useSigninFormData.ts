@@ -3,8 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { validateSigninForm } from '../utils/validate';
 import { submitSigninData } from '../utils/api';
-import { userKeys } from '../utils/queryKeys';
 import { type UserResponseData } from '../utils/types';
+import { userKeys } from '../utils/queryKeys';
 
 function useSigninFormData() {
   const queryClient = useQueryClient();
@@ -26,9 +26,9 @@ function useSigninFormData() {
   });
 
   const handleOnSuccess = (response: UserResponseData) => {
+    queryClient.setQueryData(userKeys.user, response);
     formik.resetForm();
     navigate('/');
-    queryClient.setQueryData(userKeys.withUserId(response.id), response);
   };
 
   return {

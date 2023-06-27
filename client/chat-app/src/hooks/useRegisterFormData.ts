@@ -38,7 +38,8 @@ const useRegisterFormData = () => {
   };
 
   const handleSubmitSuccess = (response: UserResponseData) => {
-    queryClient.setQueryData(userKeys.withUserId(response.id), response);
+    queryClient.setQueryData(userKeys.user, response);
+    console.log('user is set')
     formik.resetForm();
     navigate('/');
   };

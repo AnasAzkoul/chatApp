@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { socket } from '../../socket';
+import useSocket from '../../hooks/useSocket';
 
 const ChatMain = () => {
-  const [msg, setMsg] = useState('');
+  const {msg} = useSocket(); 
 
-  useEffect(() => {
-    socket.on('message', (msg) => {
-      console.log(msg, 'from main');
-      setMsg(msg);
-    });
-  }, [msg]);
 
   return (
     <div className='grid grid-cols-12 bg-indigo-100'>

@@ -15,7 +15,7 @@ export default function useLogoutUser() {
 
   const handleOnSuccess = (response: any) => {
     console.log(response);
-    queryClient.setQueryData(['user'], {});
+    queryClient.setQueryData(['user'], undefined);
     navigate('/signin');
   }
 

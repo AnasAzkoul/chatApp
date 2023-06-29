@@ -23,8 +23,8 @@ export async function protectRoute(
       throw new Error('Not Authorized, Invalid Token');
     }
   } else {
-    res.status(401);
-    throw new Error('Not Authorized, no token ');
+    res.status(401).json({ message: 'Not Authorized, no token' });
+    // throw new Error('Not Authorized, no token ');
   }
 }
 
@@ -34,7 +34,7 @@ export async function checkToken(req: Request, res: Response, next: NextFunction
     const encoded = jwt.verify(token, process.env.JWT_SECRET!);
     if (typeof encoded === 'object') {
       // @ts-ignore
-      req.user = await User.findById(encoded.userId).select('-password'); 
+      req.user = await User.findById(encoded.userId).select('-password');
     }
   }
   next();

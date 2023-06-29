@@ -1,15 +1,15 @@
-import React from 'react';
 import useLogoutUser from '../../hooks/useLogoutUser';
 import Button from '../Button';
-import {useGetAuthUser} from '../../hooks/useGetAuthUser';
+import { useGetAuthUser } from '../../hooks/useGetAuthUser';
 
 const ChatHeader = () => {
   const { mutation } = useLogoutUser();
-  const { isLoading, isError, data, error } = useGetAuthUser();
+  const { data } = useGetAuthUser();
 
   const handleLogoutUser = async () => {
     await mutation.mutate();
   };
+
   return (
     <header>
       <div className='grid items-center grid-cols-3 px-4 py-2 text-white bg-indigo-500'>

@@ -34,8 +34,8 @@ function protectRoute(req, res, next) {
             }
         }
         else {
-            res.status(401);
-            throw new Error('Not Authorized, no token ');
+            res.status(401).json({ message: 'Not Authorized, no token' });
+            // throw new Error('Not Authorized, no token ');
         }
     });
 }

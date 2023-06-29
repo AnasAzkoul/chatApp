@@ -3,6 +3,7 @@ import { socket } from '../socket';
 
 export default function useSocket() {
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [msg, setMsg] = useState('');
 
   useEffect(() => {
     socket.on('connect_error', (error) => {
@@ -17,8 +18,9 @@ export default function useSocket() {
     });
 
     // This method would broadcast a message tot he user thats connecting only;
-    socket.on('message', (message) => {
-      console.log(message);
+    socket.on('message', (msg) => {
+      console.log(msg, 'from main');
+      setMsg(msg);
     });
 
     return () => {
@@ -30,5 +32,6 @@ export default function useSocket() {
 
   return {
     isConnected,
+    msg,
   };
 }

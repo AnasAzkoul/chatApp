@@ -6,7 +6,6 @@ export interface UserResponseData  {
   email: string
 }
 
-
 export interface FormErrorTypes {
   [key: string | number]: string
 }

@@ -26,7 +26,8 @@ function useSigninFormData() {
   });
 
   const handleOnSuccess = (response: UserResponseData) => {
-    queryClient.setQueryData(userKeys.user, response);
+    // queryClient.setQueryData(userKeys.user, response);
+    queryClient.invalidateQueries(['auth_user']);
     formik.resetForm();
     navigate('/');
   };

@@ -5,6 +5,7 @@ import { validate } from '../utils/validate';
 import { submitRegisterData } from '../utils/api';
 import { userKeys } from '../utils/queryKeys';
 import { type UserResponseData } from '../utils/types';
+import { prefetchAuthUser } from '../utils/api';
 
 const useRegisterFormData = () => {
   const queryClient = useQueryClient();
@@ -37,10 +38,11 @@ const useRegisterFormData = () => {
     await mutation.mutate(values);
   };
 
-  const handleSubmitSuccess = (response: UserResponseData) => {
-    queryClient.setQueryData(userKeys.user, response);
-    console.log('user is set')
+  const handleSubmitSuccess = async (response: UserResponseData) => {
+    // queryClient.setQueryData(userKeys.user, response);
+    console.log('user is set');
     formik.resetForm();
+    await prefetchAuthUser(); 
     navigate('/');
   };
 

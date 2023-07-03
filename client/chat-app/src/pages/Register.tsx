@@ -13,7 +13,7 @@ const Register = () => {
     useToggleRegisterPasswords();
 
   return (
-    <div className='grid grid-cols-2 bg-gray-100 h-1/2'>
+    <div className='grid grid-cols-2 bg-gray-100'>
       <div className='aspect-h-6 aspect-w-9'>
         <img
           src='./src/assets/register.jpg'

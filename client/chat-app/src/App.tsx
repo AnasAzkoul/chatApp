@@ -5,8 +5,6 @@ import Register from './pages/Register.js';
 import PrivateRoute from './components/PrivateRoute.js';
 
 function App() {
-
-
   return (
     <>
       <Routes>

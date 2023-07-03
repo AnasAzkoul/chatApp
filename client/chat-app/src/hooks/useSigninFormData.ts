@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { validateSigninForm } from '../utils/validate';
 import { submitSigninData } from '../utils/api';
 import { type UserResponseData } from '../utils/types';
-import { userKeys } from '../utils/queryKeys';
+import { prefetchAuthUser } from '../utils/api';
 
 function useSigninFormData() {
   const queryClient = useQueryClient();
@@ -25,11 +25,12 @@ function useSigninFormData() {
     onSuccess: (response) => handleOnSuccess(response),
   });
 
-  const handleOnSuccess = (response: UserResponseData) => {
-    // queryClient.setQueryData(userKeys.user, response);
-    queryClient.invalidateQueries(['auth_user']);
+  const handleOnSuccess = async (response: UserResponseData) => {
     formik.resetForm();
+    await prefetchAuthUser();
     navigate('/');
+
+    // location.replace('/');
   };
 
   return {

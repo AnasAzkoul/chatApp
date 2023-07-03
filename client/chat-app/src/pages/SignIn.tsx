@@ -4,13 +4,18 @@ import Button from '../components/Button';
 import SectionTitle from '../components/SectionTitle';
 import { Link } from 'react-router-dom';
 import useSigninFormData from '../hooks/useSigninFormData';
-import {useToggleSigninPassword} from '../hooks/useTogglePasswords';
+import { useToggleSigninPassword } from '../hooks/useTogglePasswords';
+import { Navigate } from 'react-router-dom';
+import { ThreeDots } from 'react-loader-spinner';
 
 const SignIn = () => {
-  const { formik,  mutation} =
-    useSigninFormData();
+  const { formik, mutation } = useSigninFormData();
 
   const { passwordType, handleTogglePassword } = useToggleSigninPassword();
+
+  // if(mutation.isSuccess) {
+  //   return <Navigate to='/' replace/>
+  // }
 
   return (
     <>
@@ -26,11 +31,12 @@ const SignIn = () => {
             <SectionTitle>Sign in</SectionTitle>
           </div>
           <form
-            onSubmit={e => formik.handleSubmit(e)}
+            onSubmit={(e) => formik.handleSubmit(e)}
             className='grid mx-auto gap-y-10'
             noValidate
           >
             <div className='space-y-8'>
+              {/* Email */}
               <FormControl.fieldSet>
                 <FormControl.Input
                   type='email'
@@ -53,6 +59,8 @@ const SignIn = () => {
                   <></>
                 )}
               </FormControl.fieldSet>
+
+              {/* Password */}
               <FormControl.fieldSet>
                 <FormControl.Input
                   type={`${passwordType}`}
@@ -78,7 +86,29 @@ const SignIn = () => {
                   <></>
                 )}
               </FormControl.fieldSet>
-              <Button>Sign in</Button>
+              {/* Submit Button */}
+              <div className='md:col-span-2'>
+                <Button className='font-semibold text-white transition-colors duration-150 ease-in bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-l'>
+                  <div className='flex justify-center w-full gap-4'>
+                    {mutation.isLoading ? (
+                      <ThreeDots
+                        height='30'
+                        width='30'
+                        radius='9'
+                        color='#E0E0E0'
+                        ariaLabel='three-dots-loading'
+                      />
+                    ) : (
+                      <span>Sign in</span>
+                    )}
+                  </div>
+                </Button>
+                {mutation.isError ? (
+                  <FormControl.errorMessage>{}</FormControl.errorMessage>
+                ) : (
+                  <></>
+                )}
+              </div>
             </div>
           </form>
           <p className='mt-8 text-sm'>

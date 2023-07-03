@@ -1,6 +1,7 @@
 import { FormikValues } from 'formik';
 import { BASE_URL } from './config';
 import axios from 'axios';
+import queryClient from './QueryClient';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const processError = (error: any) => {
@@ -63,3 +64,10 @@ export const getAuthUser = async () => {
     return processError(error);
   }
 };
+
+export const prefetchAuthUser = async () => {
+  await queryClient.prefetchQuery({
+    queryFn: getAuthUser,
+    queryKey: ['auth_user'],
+  });
+}

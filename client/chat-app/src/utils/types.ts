@@ -1,21 +1,31 @@
 import { z } from 'zod';
 
+
+// <--------------------------------------------------->
 export interface UserResponseData  {
   id: string,
   userName: string,
   email: string
 }
 
+// <--------------------------------------------------->
+
 export interface FormErrorTypes {
   [key: string | number]: string
 }
 
+// <--------------------------------------------------->
+
 export type SigninFormPassword = 'password' | 'text';
+
+// <--------------------------------------------------->
 
 export type RegisterFormPasswords = {
   password: 'password' | 'text';
   confirmPassword: 'password' | 'text';
 };
+
+// <--------------------------------------------------->
 
 // export const newUser = z
 //   .object({

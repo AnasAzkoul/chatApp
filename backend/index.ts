@@ -9,6 +9,7 @@ dotEnv.config();
 import userRouter from './src/routes/userRoutes';
 import { notFound, errorHandler } from './src/middleware/errorMiddleWare';
 import connectDB from './src/config/db';
+import connectSocket from './src/utils/socketConnection';
 
 connectDB();
 const port = 5003;
@@ -39,28 +40,15 @@ const io = new Server(httpServer, {
     origin: 'http://localhost:5173',
     credentials: true,
   },
+  cookie: {
+    name: 'io',
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+  },
 });
 
-io.on('connection', (socket) => {
-  console.log('A user has connected');
-
-  // runs whenever the user connects; and emits a message to the user that's connecting only;
-  socket.emit('message', 'Welcome to the ChatApp');
-
-  // runs whenever a new user connects to the app; and emits an event to everyone except the user who's connecting
-  socket.broadcast.emit('message', 'A new user has joined the chat');
-
-  // Listening to the chat message;
-  socket.on('chatMessage', (msg) => {
-    console.log(msg)
-    io.emit('message', msg);
-  })
-
-  // runs when a user disconnects; emits events to all users on this connection;
-  socket.on('disconnect', () => {
-    io.emit('message', 'A user has disconnected');
-  });
-});
+connectSocket(io);
 
 // start server;
 httpServer.listen(port, () => {

@@ -13,6 +13,7 @@ dotenv_1.default.config();
 const userRoutes_1 = __importDefault(require("./src/routes/userRoutes"));
 const errorMiddleWare_1 = require("./src/middleware/errorMiddleWare");
 const db_1 = __importDefault(require("./src/config/db"));
+const socketConnection_1 = __importDefault(require("./src/utils/socketConnection"));
 (0, db_1.default)();
 const port = 5003;
 const app = (0, express_1.default)();
@@ -35,23 +36,14 @@ const io = new socket_io_1.Server(httpServer, {
         origin: 'http://localhost:5173',
         credentials: true,
     },
+    cookie: {
+        name: 'io',
+        path: '/',
+        httpOnly: true,
+        sameSite: 'lax',
+    },
 });
-io.on('connection', (socket) => {
-    console.log('A user has connected');
-    // runs whenever the user connects; and emits a message to the user that's connecting only;
-    socket.emit('message', 'Welcome to the ChatApp');
-    // runs whenever a new user connects to the app; and emits an event to everyone except the user who's connecting
-    socket.broadcast.emit('message', 'A new user has joined the chat');
-    // Listening to the chat message;
-    socket.on('chatMessage', (msg) => {
-        console.log(msg);
-        io.emit('message', msg);
-    });
-    // runs when a user disconnects; emits events to all users on this connection;
-    socket.on('disconnect', () => {
-        io.emit('message', 'A user has disconnected');
-    });
-});
+(0, socketConnection_1.default)(io);
 // start server;
 httpServer.listen(port, () => {
     console.log(`server started on PORT: ${port}`);

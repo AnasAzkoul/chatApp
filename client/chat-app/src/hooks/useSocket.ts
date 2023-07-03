@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react';
 import { socket } from '../socket';
 
+interface MessageType {
+  name: string;
+  date: Date;
+  message: string;
+}
+
 export default function useSocket() {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [msg, setMsg] = useState('');
+  const [msg, setMsg] = useState<MessageType>({
+    name: '',
+    date: new Date(0),
+    message: '',
+  });
 
   useEffect(() => {
     socket.on('connect_error', (error) => {

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import User from '../model/user';
 import { Response, Request, NextFunction } from 'express';
 
@@ -19,8 +19,13 @@ export async function protectRoute(
         next();
       }
     } catch (error) {
-      error instanceof Error && res.status(401);
-      throw new Error('Not Authorized, Invalid Token');
+      if (error instanceof Error || error instanceof JsonWebTokenError) {
+        res.status(401).json({
+          errName: error.name,
+          errStack: error.stack,
+          errMsg: error.message,
+        });
+      }
     }
   } else {
     res.status(401).json({ message: 'Not Authorized, no token' });
@@ -28,14 +33,21 @@ export async function protectRoute(
   }
 }
 
-export async function checkToken(req: Request, res: Response, next: NextFunction) {
+export async function checkToken(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const token = req.cookies.jwt;
   if (token) {
-    const encoded = jwt.verify(token, process.env.JWT_SECRET!);
-    if (typeof encoded === 'object') {
-      // @ts-ignore
-      req.user = await User.findById(encoded.userId).select('-password');
-    }
+    const encoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    // @ts-ignore
+    req.user = await getUserFromToken(encoded.userId);
   }
   next();
+}
+
+export async function getUserFromToken(token: string) {
+  const user = await User.findById(token).select('-password');
+  return user;
 }

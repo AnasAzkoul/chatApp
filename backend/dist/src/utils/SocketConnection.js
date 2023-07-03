@@ -35,55 +35,66 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserFromToken = exports.checkToken = exports.protectRoute = void 0;
 const jsonwebtoken_1 = __importStar(require("jsonwebtoken"));
 const user_1 = __importDefault(require("../model/user"));
-function protectRoute(req, res, next) {
+const moment_1 = __importDefault(require("moment"));
+const botName = 'Chat Bot';
+function getUserFromSocket(socket) {
     return __awaiter(this, void 0, void 0, function* () {
-        let token;
-        token = req.cookies.jwt;
-        if (token) {
+        const cookie = socket.handshake.headers.cookie;
+        if (cookie && cookie.startsWith('jwt=')) {
+            const token = cookie.slice('jwt='.length);
             try {
-                const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-                if (typeof decoded === 'object') {
-                    // @ts-ignore
-                    req.user = yield user_1.default.findById(decoded.userId).select('-password');
-                    next();
-                }
+                const encoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+                const user = yield user_1.default.findById(encoded.userId).select('-password');
+                return user;
             }
             catch (error) {
-                if (error instanceof Error || error instanceof jsonwebtoken_1.JsonWebTokenError) {
-                    res.status(401).json({
-                        errName: error.name,
-                        errStack: error.stack,
-                        errMsg: error.message,
-                    });
+                if (error instanceof jsonwebtoken_1.JsonWebTokenError || error instanceof Error) {
+                    return error;
                 }
             }
         }
         else {
-            res.status(401).json({ message: 'Not Authorized, no token' });
-            // throw new Error('Not Authorized, no token ');
+            return new Error('No Token');
         }
     });
 }
-exports.protectRoute = protectRoute;
-function checkToken(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const token = req.cookies.jwt;
-        if (token) {
-            const encoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-            // @ts-ignore
-            req.user = yield getUserFromToken(encoded.userId);
-        }
-        next();
-    });
+function transformMessage(user, message) {
+    return {
+        name: user.userName,
+        date: (0, moment_1.default)().format('h:mm a'),
+        message,
+    };
 }
-exports.checkToken = checkToken;
-function getUserFromToken(token) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const user = yield user_1.default.findById(token).select('-password');
-        return user;
-    });
+function connectSocket(io) {
+    io.on('connection', (socket) => __awaiter(this, void 0, void 0, function* () {
+        console.log('A user has connected');
+        const user = yield getUserFromSocket(socket);
+        // runs whenever the user connects; and emits a message to the user that's connecting only;
+        socket.emit('message', {
+            name: botName,
+            date: (0, moment_1.default)().format('h:mm a'),
+            message: 'Welcome to the chat',
+        });
+        // runs whenever a new user connects to the app; and emits an event to everyone except the user who's connecting
+        socket.broadcast.emit('message', {
+            name: botName,
+            date: (0, moment_1.default)().format('LT'),
+            message: 'Welcome to the chat',
+        });
+        // Listening to the chat message;
+        socket.on('chatMessage', (msg) => {
+            io.emit('message', transformMessage(user, msg));
+        });
+        // runs when a user disconnects; emits events to all users on this connection;
+        socket.on('disconnect', () => {
+            io.emit('message', {
+                name: botName,
+                date: (0, moment_1.default)().format('h:mm a'),
+                message: 'Welcome to the chat',
+            });
+        });
+    }));
 }
-exports.getUserFromToken = getUserFromToken;
+exports.default = connectSocket;

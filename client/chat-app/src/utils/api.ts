@@ -13,6 +13,7 @@ const processError = (error: any) => {
   }
 };
 
+// <------------------------ Register new user ------------------------>
 export const submitRegisterData = async (formData: FormikValues) => {
   try {
     const response = await axios.post(`${BASE_URL}/users/register`, formData, {
@@ -24,6 +25,7 @@ export const submitRegisterData = async (formData: FormikValues) => {
   }
 };
 
+// <------------------------ Sign-in an existing user ------------------------>
 export const submitSigninData = async (formData: FormikValues) => {
   try {
     const response = await axios.post(`${BASE_URL}/users/auth`, formData, {
@@ -36,6 +38,7 @@ export const submitSigninData = async (formData: FormikValues) => {
   }
 };
 
+// <------------------------ Logout a signed-in user ------------------------>
 export const handleLogoutUser = async () => {
   try {
     const response = await fetch(`${BASE_URL}/users/logout`, {
@@ -53,6 +56,7 @@ export const handleLogoutUser = async () => {
   }
 };
 
+// <------------------------ Fetch the Authenticated user ------------------------>
 export const getAuthUser = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/users/auth`, {
@@ -65,9 +69,23 @@ export const getAuthUser = async () => {
   }
 };
 
+// <------------------------ prefetch the Authenticated user ------------------------>
 export const prefetchAuthUser = async () => {
   await queryClient.prefetchQuery({
     queryFn: getAuthUser,
     queryKey: ['auth_user'],
   });
-}
+};
+
+// <------------------------ Fetch all chat Rooms ------------------------>
+export const getAllRooms = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/rooms`, {
+      withCredentials: true,
+    });
+    const data = await response.data;
+    return data;
+  } catch (error) {
+    return processError(error);
+  }
+};

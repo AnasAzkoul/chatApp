@@ -10,6 +10,7 @@ import userRouter from './src/routes/userRoutes';
 import { notFound, errorHandler } from './src/middleware/errorMiddleWare';
 import connectDB from './src/config/db';
 import connectSocket from './src/utils/socketConnection';
+import roomRouter from './src/routes/roomRoute';
 
 connectDB();
 const port = 5003;
@@ -28,6 +29,7 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/rooms', roomRouter);
 
 // Error handler middleware
 app.use(notFound);

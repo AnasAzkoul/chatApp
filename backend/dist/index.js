@@ -14,6 +14,7 @@ const userRoutes_1 = __importDefault(require("./src/routes/userRoutes"));
 const errorMiddleWare_1 = require("./src/middleware/errorMiddleWare");
 const db_1 = __importDefault(require("./src/config/db"));
 const socketConnection_1 = __importDefault(require("./src/utils/socketConnection"));
+const roomRoute_1 = __importDefault(require("./src/routes/roomRoute"));
 (0, db_1.default)();
 const port = 5003;
 const app = (0, express_1.default)();
@@ -26,6 +27,7 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 // Routes
 app.use('/api/v1/users', userRoutes_1.default);
+app.use('/api/v1/rooms', roomRoute_1.default);
 // Error handler middleware
 app.use(errorMiddleWare_1.notFound);
 app.use(errorMiddleWare_1.errorHandler);

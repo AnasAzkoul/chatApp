@@ -1,8 +1,7 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import FormControl from '../FormControl';
 import { AiOutlineSend } from 'react-icons/ai';
 import { socket } from '../../socket';
-import {set} from 'zod';
 
 const ChatForm = () => {
   const [chatMessage, setChatMessage] = useState('');
@@ -11,10 +10,8 @@ const ChatForm = () => {
 
     // emit a message to the server
     socket.emit('chatMessage', chatMessage);
-    setChatMessage(''); 
+    setChatMessage('');
   };
-
-
 
   return (
     <form

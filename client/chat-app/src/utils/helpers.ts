@@ -1,5 +1,7 @@
 import { type SigninFormPassword, type RegisterFormPasswords } from './types';
 
+// <------------------------ Sign-in Form password toggle ------------------------>
+
 export const passwordHandler = (value: SigninFormPassword) => {
   if (value === 'password') {
     return 'text';
@@ -7,6 +9,8 @@ export const passwordHandler = (value: SigninFormPassword) => {
     return 'password';
   }
 };
+
+// <------------------------ Register Form password toggle ------------------------>
 
 export const registerPasswordHandler = (
   value: RegisterFormPasswords
@@ -24,6 +28,8 @@ export const registerPasswordHandler = (
   }
 };
 
+// <------------------------ Register Form confirm password toggle ------------------------>
+
 export const registerConfirmPasswordHandler = (
   value: RegisterFormPasswords
 ): RegisterFormPasswords => {
@@ -39,3 +45,5 @@ export const registerConfirmPasswordHandler = (
     };
   }
 };
+
+

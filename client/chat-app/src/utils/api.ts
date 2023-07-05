@@ -2,6 +2,7 @@ import { FormikValues } from 'formik';
 import { BASE_URL } from './config';
 import axios from 'axios';
 import queryClient from './QueryClient';
+import { QueryKeys } from './queryKeys';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const processError = (error: any) => {
@@ -69,16 +70,8 @@ export const getAuthUser = async () => {
   }
 };
 
-// <------------------------ prefetch the Authenticated user ------------------------>
-export const prefetchAuthUser = async () => {
-  await queryClient.prefetchQuery({
-    queryFn: getAuthUser,
-    queryKey: ['auth_user'],
-  });
-};
-
 // <------------------------ Fetch all chat Rooms ------------------------>
-export const getAllRooms = async () => {
+export async function getAllRooms() {
   try {
     const response = await axios.get(`${BASE_URL}/rooms`, {
       withCredentials: true,
@@ -88,4 +81,17 @@ export const getAllRooms = async () => {
   } catch (error) {
     return processError(error);
   }
+}
+
+// <------------------------ prefetch the Authenticated user and Rooms in database ------------------------>
+export const prefetchAuthUser = async () => {
+  await queryClient.prefetchQuery({
+    queryFn: getAuthUser,
+    queryKey: [QueryKeys.Auth_User],
+  });
+
+  await queryClient.prefetchQuery({
+    queryFn: getAllRooms,
+    queryKey: [QueryKeys.ROOMS],
+  });
 };

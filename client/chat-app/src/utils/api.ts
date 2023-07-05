@@ -3,6 +3,8 @@ import { BASE_URL } from './config';
 import axios from 'axios';
 import queryClient from './QueryClient';
 import { QueryKeys } from './queryKeys';
+import { RoomsResult, RoomsResultTypes } from './types';
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const processError = (error: any) => {
@@ -71,7 +73,8 @@ export const getAuthUser = async () => {
 };
 
 // <------------------------ Fetch all chat Rooms ------------------------>
-export async function getAllRooms() {
+
+export async function getAllRooms():Promise<RoomsResultTypes[] | Error | undefined> {
   try {
     const response = await axios.get(`${BASE_URL}/rooms`, {
       withCredentials: true,

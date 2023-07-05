@@ -1,10 +1,9 @@
 import Chat from '../components/Chat';
-import useRooms from '../hooks/useRooms';
+import SelectRoom from '../components/SelectRoom';
 
 const Home = () => {
-  const { rooms } = useRooms();
 
-  return <Chat />;
+  return <SelectRoom />;
 };
 
 export default Home;

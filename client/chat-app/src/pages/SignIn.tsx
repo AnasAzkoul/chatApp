@@ -13,10 +13,6 @@ const SignIn = () => {
 
   const { passwordType, handleTogglePassword } = useToggleSigninPassword();
 
-  // if(mutation.isSuccess) {
-  //   return <Navigate to='/' replace/>
-  // }
-
   return (
     <>
       <div className='grid grid-cols-2 bg-gray-100'>

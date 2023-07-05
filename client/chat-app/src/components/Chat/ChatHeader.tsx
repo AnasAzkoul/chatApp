@@ -12,10 +12,10 @@ const ChatHeader = () => {
 
   return (
     <header>
-      <div className='grid items-center grid-cols-3 px-4 py-2 text-white bg-indigo-500'>
+      <div className='flex items-center gap-8 px-4 py-2 text-white bg-indigo-500'>
         <div>The Chat</div>
         {data?.userName && (
-          <span className='basis-1/3'>Welcome back {data.userName}</span>
+          <span className=''>Welcome back {data.userName}</span>
         )}
         <Button
           onClick={handleLogoutUser}

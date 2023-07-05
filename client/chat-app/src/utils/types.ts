@@ -25,6 +25,13 @@ export type RegisterFormPasswords = {
 };
 
 // <--------------------------------------------------->
+export const RoomsResult = z.object({
+  _id: z.string(),
+  name: z.string(),
+})
+
+export type RoomsResultTypes = z.infer<typeof RoomsResult>
+// <--------------------------------------------------->
 
 export const newUser = z.object({
   firstName: z
